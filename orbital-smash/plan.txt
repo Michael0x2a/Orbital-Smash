@@ -1,0 +1,59 @@
+Orbital Smasher
+
+Style:
+    Space
+    Frenzy
+    
+UI:
+    Try and use only the mouse/buttons
+
+Core mechanic:
+    Flying planetoids which collect other flying planetoids
+    Use movement to make detritus spin
+    Fling or smash detritus into other planetoids to reduce health
+    Detritus can absorb gunfire, shoot things, make things catch on fire, 
+    ...are radioactive (hurts user), etc.
+    
+Layers:
+    X Game loop (moving objects)
+    X Basic input (mouse to planet)
+    X Collision detection
+    X Health
+    X Physics (orbit)
+    X Better input (mouse to detritus orbit)
+    X Flinging
+    X AI
+    X Gunfire
+    X Menus and such
+    
+Next layers:
+    X Pause menu
+    X Start menu
+    Game levels
+    Level fillers
+    X More AI/enemies
+    X More rocks (brown == breakable, large brown -> small brown, steel = unbreakable)
+    X Animations
+    
+Moar layers:
+    X Setup waves, and split generation/gameloop layers
+    Procedurally generated enemies
+    Analyze player gameplay and evolve combos that they have difficulty with
+    
+Extras:
+    X Parallax background of stars/grids
+    Shadowcasting
+    X Nicer graphics
+    
+    
+Architecture:
+    Entities possess components. 
+    Different "processors" filter through entities and apply an operation if they contain a 
+    ...given component.
+    Components are IDs, not objects or executables.
+    Component IDS can contain specifiers.
+    Flow:
+        Processors handle input, output, physics.
+        Processors will iterate through all entities to update their data
+        Entities contain a list of components, and a dict which processors can attach data to
+        

@@ -1,0 +1,24 @@
+Meowgellan              ~
+Keyboard Signature      ~ 
+Rubik's Cube Solver     ~
+Flashcards              ~
+Chemwar                 ~ (C++ or Java)
+Panime                  ~ 
+Skillshake              ~
+Local IFTTT             ~
+Codeday replacement     ~
+HTML5 Tetris Attack     ~
+
+Karaoke anywhere        X
+Music <-> Image         X
+Computer Invader        X
+Post Stalker            X
+ClassChat               X
+CodeDay Playlist        X
+Android Fractals        X
+VidWall                 X
+??? Business Cards      X
+ConsoleCalc             X
+Roshki on the Run       X
+Corporate Minigame      X
+Fallbreaker             X
