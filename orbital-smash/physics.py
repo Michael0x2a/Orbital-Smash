@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import division
 
 import math
 import random
@@ -10,77 +11,92 @@ def remove(list, item):
     del list[list.index(item)]
 
 def get_distance(a, b):
-    return (a - b).to_polar().magnitude
+    return (a - b).magnitude
     
 
-class Cartesian(object):
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+class Delta(object):
+    def __init__(self, a, b, type="cartesian"):
+        assert type in ("cartesian", "polar")
+        
+        if type == "cartesian":
+            self._x = a
+            self._y = b
+        elif type == "polar":
+            magnitude, angle = a, b
+            self._x = math.cos(angle) * magnitude
+            self._y = math.sin(angle) * magnitude
+            
+    @property
+    def x(self):
+        return self._x
+        
+    @x.setter
+    def x(self, x):
+        self._x = x
+        
+    @property
+    def y(self):
+        return self._y
+        
+    @y.setter
+    def y(self, y):
+        self._y = y
+        
+    @property
+    def magnitude(self):
+        return math.sqrt(self._x**2 + self._y**2)
+        
+    @magnitude.setter
+    def magnitude(self, magnitude):
+        angle = self.angle
+        self._x = math.cos(angle) * magnitude
+        self._y = math.sin(angle) * magnitude
+        
+    @property
+    def angle(self):
+        return math.atan2(self._y, self._x)
+        
+    @angle.setter
+    def angle(self, angle):
+        magnitude = self.magnitude
+        self._x = math.cos(angle) * magnitude
+        self._y = math.sin(angle) * magnitude
         
     def pos(self):
         return (int(self.x), int(self.y))
         
-    def to_polar(self):
-        magnitude = math.sqrt(self.x**2 + self.y**2)
-        angle = math.atan2(self.y, self.x)
-        return Polar(magnitude, angle)
-        
-    def to_cartesian(self):
-        print "Warning: coercing cartesian to cartesian"
-        return self
-        
     def copy(self):
-        return Cartesian(self.x, self.y)
+        return Delta(self.x, self.y)
         
     def dot(self, other):
         return self.x * other.x + self.y * other.y
         
-    def magnitude(self):
-        return self.to_polar().magnitude
-        
-    def angle(self):
-        return self.to_polar().angle
-        
     def __add__(self, other):
-        return Cartesian(self.x + other.x, self.y + other.y)
+        return Delta(self.x + other.x, self.y + other.y)
         
     def __sub__(self, other):
-        return Cartesian(self.x - other.x, self.y - other.y)
+        return Delta(self.x - other.x, self.y - other.y)
         
     def __div__(self, num):
-        return Cartesian(self.x / num, self.y / num)
+        return Delta(self.x / num, self.y / num)
+        
+    def __truediv__(self, num):
+        return Delta(self.x / num, self.y / num)
     
     def __mul__(self, num):
-        return Cartesian(self.x * num, self.y * num)
+        return Delta(self.x * num, self.y * num)
         
     def __rmul__(self, num):
         return self.__mul__(num)
         
     def __repr__(self):
-        return 'Cartesian({0}, {1})'.format(self.x, self.y)
-        
-class Polar(object):
-    def __init__(self, magnitude, angle):
-        self.magnitude = magnitude
-        self.angle = angle
-        
-    def to_cartesian(self):
-        x = math.cos(self.angle) * self.magnitude
-        y = math.sin(self.angle) * self.magnitude
-        return Cartesian(x, y)
-        
-    def to_polar(self):
-        print "Warning: coercing polar to polar"
-        return self
-        
-    def copy(self):
-        return Polar(self.magnitude, self.angle)
-        
-    def __add__(self, other):
-        return (self.to_cartesian() + other.to_cartesian()).to_polar()
-        
-        
+        return 'Delta({0}, {1})'.format(self.x, self.y)
+
+def Cartesian(x, y):
+    return Delta(x, y, 'cartesian')
+    
+def Polar(magnitude, angle):
+    return Delta(magnitude, angle, 'polar')
         
 def is_colliding(a, b):
     distance = get_distance(a.position, b.position)
@@ -90,16 +106,14 @@ def is_colliding(a, b):
     
 def calculate_midpoint(position_1, position_2, radius_1, radius_2):
     normal = calculate_normal(position_1, position_2)
-    normal = normal.to_polar()
     normal.magnitude = radius_2
-    intersection = position_2 + normal.to_cartesian()
+    intersection = position_2 + normal
     return intersection
     
 def calculate_normal(center, intersection):
     normal = center - intersection
-    normal = normal.to_polar()
     normal.magnitude = 1
-    return normal.to_cartesian()
+    return normal
     
 def hard_push(a, b, distance_1, distance_2):
     collision_point = calculate_midpoint(a, b, distance_1, distance_2)
@@ -128,17 +142,13 @@ def calculate_sphere_collision(a, b):
     normal = calculate_normal(a.position, collision_point)
     reflection = calculate_reflection(normal, a.velocity)
     
-    reflection = reflection.to_polar()
-    a_vel = a.velocity.to_polar()
-    b_vel = b.velocity.to_polar()
-    total_momentum = a.mass * a_vel.magnitude + b.mass * b_vel.magnitude
-    new_magnitude = total_momentum / (a.mass + b.mass)
-    reflection.magnitude = new_magnitude
+    total_momentum = a.mass * a.velocity.magnitude + b.mass * b.velocity.magnitude
+    reflection.magnitude = total_momentum / (a.mass + b.mass)
     
-    return reflection.to_cartesian()
+    return reflection
     
 def calculate_individual_damage(object, step):
-    acceleration = object.velocity.magnitude() * step
+    acceleration = object.velocity.magnitude * step
     force = object.mass * acceleration
     return force
     
@@ -274,24 +284,22 @@ class Physics(object):
                         if o_distance < collector.push_radius + orbiting.radius:
                             orbiting.position = collector.position - (collector.push_radius + orbiting.radius) * normal
                         
-                        normal.magnitude = orbiting.mass * collector.mass / o_distance**2
+                        #normal.magnitude = orbiting.mass * collector.mass / o_distance**2
                         orbiting.velocity += normal
                                 
             if entities.Moveable in e:
                 e.velocity += e.acceleration
                 e.velocity *= e.dampening
                 
-                e.velocity = e.velocity.to_polar()
                 if e.velocity.magnitude >= 15:
                     e.velocity.magnitude = 15
-                e.velocity = e.velocity.to_cartesian()
                 
                 e.position += e.velocity
                 
             if entities.Rotates in e:
                 if entities.FacesUser in e:
                     if human is not None:
-                        vector = (e.position - human.position).to_polar()
+                        vector = e.position - human.position
                         e.angle = -vector.angle
                     
         return output

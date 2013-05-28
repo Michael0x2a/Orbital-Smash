@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import division
+
 import copy
 import random
 
@@ -197,15 +199,13 @@ def make_bullet(start, target, radius):
     )
     
     vector = target - start
-
-    vector = vector.to_polar()
     normal = vector.copy()
     
     vector.magnitude = 8
     normal.magnitude = (radius + 25)
     
-    bullet.initial_velocity = vector.to_cartesian()
-    bullet.initial_position = start + normal.to_cartesian()
+    bullet.initial_velocity = vector
+    bullet.initial_position = start + normal
     bullet.additional_damage = 50
     return bullet
     
@@ -233,14 +233,13 @@ def make_star(start, target, radius):
     
     vector = target - start
 
-    vector = vector.to_polar()
     normal = vector.copy()
     
     vector.magnitude = 8
     normal.magnitude = (radius + 25)
     
-    star.initial_velocity = vector.to_cartesian()
-    star.initial_position = start + normal.to_cartesian()
+    star.initial_velocity = vector
+    star.initial_position = start + normal
     return star
     
     

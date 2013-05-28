@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import division
+
 import pygame
 import entities
 import physics
@@ -33,9 +35,8 @@ class Events(object):
             if entities.UserControllable in e:
                 target = physics.Cartesian(*pygame.mouse.get_pos())
                 force = 20
-                acceleration = (target - e.position).to_polar()
-                acceleration.magnitude = force / e.mass
-                e.acceleration = acceleration.to_cartesian()
+                e.acceleration = target - e.position
+                e.acceleration.magnitude = force / e.mass
                 if entities.Collector in e:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         e.is_collector_active = True

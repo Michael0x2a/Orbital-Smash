@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import division
+
 import pygame
 import math
 import random
@@ -53,23 +55,21 @@ class AI(object):
             
             if entities.JaggedPath in e:
                 if (time - e.last_movement_time) >= e.move_timer_delta / 2:
-                    if e.velocity.magnitude() == 0:
-                        e.velocity = physics.Polar(e.speed, random.random() * math.pi * 2).to_cartesian()
+                    if e.velocity.magnitude == 0:
+                        e.velocity = physics.Polar(e.speed, random.random() * math.pi * 2)
                 if (time - e.last_movement_time) >= e.move_timer_delta:
                     e.last_movement_time = time
                     e.velocity = physics.Cartesian(0, 0)
             if entities.TrackingPath in e:
                 target = random.choice(self.avoid)
-                vector = (target.position - e.position).to_polar()
-                vector.magnitude = e.speed
-                e.velocity = vector.to_cartesian()
+                e.velocity = target.position - e.position
+                e.velocity.magnitude = e.speed
             if entities.BulldozePath in e:
                 if (time - e.last_movement_time) >= e.move_timer_delta / 2:
-                    if e.velocity.magnitude() == 0:
+                    if e.velocity.magnitude == 0:
                         target = random.choice(self.avoid)
-                        vector = (target.position - e.position).to_polar()
-                        vector.magnitude = e.speed
-                        e.velocity = vector.to_cartesian()
+                        e.velocity = target.position - e.position
+                        e.velocity.magnitude = e.speed
                 if (time - e.last_movement_time) >= e.move_timer_delta:
                     e.last_movement_time = time
                     e.velocity = physics.Cartesian(0, 0)
@@ -84,10 +84,9 @@ class AI(object):
                 if distance < human.draw_radius + 150:
                     e.position = human.position - (human.push_radius + 175) * normal
                 
-                normal = normal.to_polar()
                 normal.magnitude = e.mass * human.mass / distance**2
                 normal.angle += random.choice([math.pi / 2, -math.pi / 2])
-                e.velocity += normal.to_cartesian()
+                e.velocity += normal
                         
                         
             if entities.ShootingAttack in e:
@@ -99,14 +98,14 @@ class AI(object):
                 if (time - e.last_shoot_time)  >= e.shoot_timer_delta:
                     e.last_shoot_time = time
                     for i in range(8):
-                        target = e.position + physics.Polar(16, i / 4.0 * math.pi).to_cartesian()
+                        target = e.position + physics.Polar(16, i / 4.0 * math.pi)
                         bullet = entities.make_bullet(e.position, target, e.radius)
                         new.append(bullet)
             if entities.SwarmingAttack in e:
                 if (time - e.last_shoot_time)  >= e.shoot_timer_delta:
                     e.last_shoot_time = time
                     for i in range(2):
-                        target = e.position + physics.Polar(16, i * math.pi).to_cartesian()
+                        target = e.position + physics.Polar(16, i * math.pi)
                         star = entities.make_star(e.position, target, e.radius)
                         new.append(star)
             
