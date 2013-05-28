@@ -7,6 +7,7 @@ import Tkinter
 import tkMessageBox
 
 __version__ = "1.0"
+__release__ = "May 28, 2013"
 
 
 def warn(message, record=False):

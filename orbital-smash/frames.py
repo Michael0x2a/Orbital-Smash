@@ -6,6 +6,7 @@ import pygame
 import collections
 import math
 import random
+import errors
 
 import entities
 import ai
@@ -164,12 +165,13 @@ def make_pause_menu(renderer, things):
         ('About', lambda: make_about_dialog(renderer, things))
     ]))
     
-def make_about_dialog(renderer, things):
+def make_about_dialog(renderer, things, next=end_frame):
     return Dialog(renderer, things, 'About', [
         'Orbital Smash',
         '',
         'Objective: ',
         '    Smash things before you get smashed!',
+        '    How long can you last?'
         '',
         'How to play:',
         '    Move with your mouse',
@@ -180,12 +182,18 @@ def make_about_dialog(renderer, things):
         '    Press [p] or [esc] to pause',
         '',
         'Made for Codeday Seattle, 2013',
-        'By Michael Lee'
-    ])
+        'By Michael Lee',
+        'Version {0} ({1})'.format(errors.__version__, errors.__release__)
+    ],
+    next)
+    
+def make_intro_to_game_sequence(renderer, things):
+    return make_about_dialog(renderer, things, lambda: end_frame_push_next(
+        Gameloop(renderer, things, 0)))
     
 def make_start_menu(renderer, things):
     return Menu(renderer, things, 'ORBITAL SMASH', collections.OrderedDict([
-            ('Start game', lambda: end_frame_push_next(Gameloop(renderer, things, 0))),
+            ('Start game', lambda: make_intro_to_game_sequence(renderer, things)),
             ('About', lambda: make_about_dialog(renderer, things)),
             ('Quit', end_game)
         ]), 350)
