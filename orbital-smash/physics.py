@@ -155,9 +155,9 @@ def calculate_individual_damage(object, step):
 def calculate_damage(a, b, step):
     damage_to_a = calculate_individual_damage(b, step) + 1
     damage_to_b = calculate_individual_damage(a, step) + 1
-    if entities.ContactAttack in a:
+    if entities.CONTACT_ATTACK in a:
         damage_to_b += a.additional_damage
-    if entities.ContactAttack in b:
+    if entities.CONTACT_ATTACK in b:
         damage_to_a += b.additional_damage
     return damage_to_a, damage_to_b
     
@@ -171,63 +171,63 @@ class Physics(object):
         
     def initialize(self, things):
         for e in things:
-            if entities.UserControllable in e:
+            if entities.USER_CONTROLLABLE in e:
                 e.position = Cartesian(400, 400)
                 e.mass = 20.0
                 e.dampening = 0.92                    
-                if entities.Damageable in e:
+                if entities.DAMAGEABLE in e:
                     e.health = 400
                     e.max_health = 400
-                if entities.Rotates in e:
+                if entities.ROTATES in e:
                     e.angle = 0
-            if entities.Rock in e:
+            if entities.ROCK in e:
                 # TODO: randomize position
                 e.position = Cartesian(random.randint(50, 750), random.randint(50, 750))
                 e.mass = random.randint(40, 55)
                 e.dampening = random.choice([0.98, 0.99, 0.999])
-                if entities.Damageable in e:
+                if entities.DAMAGEABLE in e:
                     e.health = random.choice(range(500, 1000, 20))
                     e.max_health = e.health
-                if entities.Rotates in e:
+                if entities.ROTATES in e:
                     e.angle = random.random() * math.pi * 2
-            if entities.Enemy in e:
+            if entities.ENEMY in e:
                 e.position = Cartesian(random.randint(50, 750), random.randint(50, 750))
                 e.mass = random.randint(10, 55)
                 e.dampening = random.choice([0.98, 0.99, 0.999])
-                if entities.Damageable in e:
+                if entities.DAMAGEABLE in e:
                     e.health = random.choice(range(40, 300, 20))
                     e.max_health = e.health
-                if entities.Rotates in e:
+                if entities.ROTATES in e:
                     e.angle = random.random() * math.pi * 2
-            if entities.Star in e:
+            if entities.STAR in e:
                 e.position = Cartesian(random.randint(50, 750), random.randint(50, 750))
                 e.mass = random.randint(5, 15)
                 e.dampening = random.choice([0.98, 0.99, 0.999])
-                if entities.Damageable in e:
+                if entities.DAMAGEABLE in e:
                     e.health = random.choice(range(20, 40))
                     e.max_health = e.health
-                if entities.Rotates in e:
+                if entities.ROTATES in e:
                     e.angle = random.random() * math.pi * 2
-            if entities.Moveable in e:
+            if entities.MOVEABLE in e:
                 e.velocity = Cartesian(0, 0)
                 e.acceleration = Cartesian(0, 0)
-            if entities.Collector in e:
+            if entities.COLLECTOR in e:
                 e.draw_radius = 150
                 e.push_radius = 50
                 e.max_collectable = 1 # Anything else is too buggy for me to bother.
-            if entities.Bullet in e:
+            if entities.BULLET in e:
                 e.position = e.initial_position
                 e.velocity = e.initial_velocity
                 e.mass = 0
                 e.dampening = 1.0
-                if entities.Damageable in e:
+                if entities.DAMAGEABLE in e:
                     e.health = 1
                     e.max_health = 1
         
     def process(self, things):
         score = 0
-        collectors = [e for e in things if entities.Collector in e]
-        humans = [e for e in collectors if entities.UserControllable in e]
+        collectors = [e for e in things if entities.COLLECTOR in e]
+        humans = [e for e in collectors if entities.USER_CONTROLLABLE in e]
         if len(humans) == 0:
             human = None
         else:
@@ -235,16 +235,16 @@ class Physics(object):
             
         output = []
         for e in things:
-            if entities.Solid in e:
+            if entities.SOLID in e:
                 for other in things:
                     if other == e:
                         continue
-                    if entities.Solid not in other:
+                    if entities.SOLID not in other:
                         continue
                     if is_colliding(e, other):
                         self.calculate_collision(e, other)
                         self.calculate_entity_damage(e, other)
-                        if entities.Bullet not in e and entities.Bullet not in other:
+                        if entities.BULLET not in e and entities.BULLET not in other:
                             explosion = entities.make_explosion(
                                 calculate_midpoint(e.position, other.position, e.radius, other.radius),
                                 'Collision')
@@ -252,15 +252,15 @@ class Physics(object):
                         else:
                             explosion = entities.make_explosion(
                                 calculate_midpoint(e.position, other.position, e.radius, other.radius),
-                                'Bullet')
+                                'BULLET')
                             output.append(explosion)
                         
                 # Wall collision
                 self.calculate_wall_collision(e)
                 
-            if entities.Orbitable in e:
+            if entities.ORBITABLE in e:
                 for collector in collectors:
-                    if not collector.is_collector_active:
+                    if not entities.COLLECTOR_ACTIVE in collector:
                         continue
                     distance = get_distance(e.position, collector.position)
                     if distance >= collector.draw_radius and e not in collector.collected_objects:
@@ -270,24 +270,25 @@ class Physics(object):
                         if e not in collector.collected_objects:
                             collector.collected_objects.append(e)
                             
-                    for orbiting in collector.collected_objects:
-                        if entities.Dead in orbiting:
-                            remove(collector.collected_objects, orbiting)
-                            
-                        o_distance = get_distance(orbiting.position, collector.position)
+            if entities.COLLECTOR_ACTIVE in e:
+                for orbiting in e.collected_objects:
+                    if entities.DEAD in orbiting:
+                        remove(e.collected_objects, orbiting)
                         
-                        normal = calculate_normal(collector.position, orbiting.position)
+                    o_distance = get_distance(orbiting.position, e.position)
+                    
+                    normal = calculate_normal(e.position, orbiting.position)
+                    
+                    if o_distance > e.draw_radius:
+                        orbiting.position = e.position - e.draw_radius * normal
                         
-                        if o_distance > collector.draw_radius:
-                            orbiting.position = collector.position - collector.draw_radius * normal
-                            
-                        if o_distance < collector.push_radius + orbiting.radius:
-                            orbiting.position = collector.position - (collector.push_radius + orbiting.radius) * normal
-                        
-                        #normal.magnitude = orbiting.mass * collector.mass / o_distance**2
-                        orbiting.velocity += normal
+                    if o_distance < e.push_radius + orbiting.radius:
+                        orbiting.position = e.position - (e.push_radius + orbiting.radius) * normal
+                    
+                    #normal.magnitude = orbiting.mass * e.mass / o_distance**2
+                    orbiting.velocity += normal
                                 
-            if entities.Moveable in e:
+            if entities.MOVEABLE in e:
                 e.velocity += e.acceleration
                 e.velocity *= e.dampening
                 
@@ -296,13 +297,18 @@ class Physics(object):
                 
                 e.position += e.velocity
                 
-            if entities.Rotates in e:
-                if entities.FacesUser in e:
+            if entities.ROTATES in e:
+                if entities.FACES_USER in e:
                     if human is not None:
                         vector = e.position - human.position
                         e.angle = -vector.angle
                     
-        return output
+        return output, None
+        
+    def heartbeat(self):
+        '''Called after the loop, for anything which is vital for keeping
+        the game running but doesn't actually process anything.'''
+        pass
             
     def calculate_collision(self, e, other):
         e.position, other.position = fix_overlap(e, other)
@@ -310,7 +316,7 @@ class Physics(object):
         other.velocity = calculate_sphere_collision(other, e)
         
     def calculate_wall_collision(self, e):
-        if entities.Bounded in e:
+        if entities.BOUNDED in e:
             if e.position.x - e.radius < 0:
                 e.position.x = e.radius
                 e.velocity = calculate_reflection(Cartesian(1, 0), e.velocity)
@@ -331,18 +337,18 @@ class Physics(object):
                 e.position.y > 800 + e.radius * 2
             ]
             if True in out:
-                e.add(entities.Dead)
+                e.add(entities.DEAD)
         
     def calculate_entity_damage(self, e, other):
         damage_to_a, damage_to_b = calculate_damage(e, other, self.step)
-        if entities.Damageable in e:
+        if entities.DAMAGEABLE in e:
             e.health -= damage_to_a
             if e.health <= 0:
-                e.add(entities.Dead)
-        if entities.Damageable in other:
+                e.add(entities.DEAD)
+        if entities.DAMAGEABLE in other:
             other.health -= damage_to_b
             if other.health <= 0:
-                other.add(entities.Dead)
+                other.add(entities.DEAD)
         
                 
             

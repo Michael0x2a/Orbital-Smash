@@ -1,18 +1,26 @@
 #!/usr/bin/env python
+'''
+Contains the code necessary render the graphics using pygame.
+'''
 
 from __future__ import division
 
-import pygame
 import math
 import random
 import sys
 import os.path
+
+import pygame
 
 import entities
 import physics
 
 
 def load_resource(relative_path):
+    '''Safely loads all resources (images and fonts).
+    
+    Pygame does not load things normally, so requires some
+    boilerplate code as a hack.'''
     try:
         base_path = sys._MEIPASS
     except AttributeError:
@@ -21,12 +29,17 @@ def load_resource(relative_path):
     return os.path.join(base_path, relative_path)
         
 def load_image(path):
-    return pygame.image.load(load_resource(path)).convert_alpha()
+    '''Loads an image and converts it into a format pygame likes.
+    
+    Note: this automatically looks in the 'images' folder.'''
+    relative = os.path.join('images', path)
+    return pygame.image.load(load_resource(relative)).convert_alpha()
 
 def generate_stargrid(image_name, offset):
+    '''Generates a stargrid for the background (parallax effect).'''
     image = load_image(image_name)
     field = []
-    for i in range(30):
+    for _ in range(30):
         position = physics.Cartesian(
             random.randint(-offset, 800 + offset), 
             random.randint(-offset, 800 + offset))
@@ -35,136 +48,202 @@ def generate_stargrid(image_name, offset):
         
 
 class Renderer(object):
+    '''An object which processes a list of entities and renders all
+    graphics. Also works with menus and dialogs.'''
     def __init__(self, size=(800, 800), caption="Orbital Smash"):
-        pygame.init()
-        
-        self.size = size
-        self.caption = caption
-        
-        self.screen = pygame.display.set_mode(self.size)
-        pygame.display.set_caption(self.caption)
-        
-        self.clear_screen()
-        
-        self.human_image = load_image(r'images\human.png')
-        self.rock_image = load_image(r'images\spaceArt\png\meteorSmall.png')
-        self.steel_rock_image = load_image(r'images\spaceArt\png\steelMeteorSmall.png')
-        
-        self.ufo_image = load_image(r'images\spaceArt\png\enemyUFO.png')
-        self.ufo_image = pygame.transform.scale(self.ufo_image, (45, 45))
-        self.shooter_image = load_image(r'images\spaceArt\png\enemyShip.png')
-        self.shooter_image = pygame.transform.rotate(self.shooter_image, -90)
-        self.bullet_image = load_image(r'images\bullet.png')
-        self.mine_image = load_image(r'images\spaceArt/png/laserRedShot.png')
-        self.star_image = load_image(r'images\asterisk.png')
-        
-        self.blast_wave = load_image(r'images\blast_wave.png')
-        self.blast_wave_minor = load_image(r'images\blast_wave_yellow.png')
-        self.blast_wave_player_death = load_image(r'images\blast_wave_green.png')
-        
-        self.large_starfield = generate_stargrid(r'images\spaceArt\png\Background\starBig.png', 16)
-        self.small_starfield = generate_stargrid(r'images\spaceArt\png\Background\starSmall.png', 8)
-        
-        self.title_font = pygame.font.Font(load_resource(r'fonts\orbitron\OrbitronMedium.ttf'), 32)
-        self.font = pygame.font.Font(load_resource(r'fonts\orbitron\OrbitronMedium.ttf'), 16)
-        
         self.animations = []
         
-    def initialize(self, things):
-        for e in things:
-            if entities.HumanSprite in e:
-                e.scaled_image = e.image = self.human_image
-                e.radius = 8
-            if entities.RockSprite in e:
-                e.scaled_image = e.image = self.rock_image
-                e.radius = 21
-            if entities.SteelSprite in e:
-                e.scaled_image = e.image = self.steel_rock_image
-                e.radius = 21
-            if entities.UfoSprite in e:
-                e.scaled_image = e.image = self.ufo_image
-                e.radius = 22
-            if entities.ShooterSprite in e:
-                e.scaled_image = e.image = self.shooter_image
-                e.radius = 25
-            if entities.MineSprite in e:
-                e.scaled_image = e.image = self.mine_image
-                e.radius = 12
-            if entities.BulletSprite in e:
-                e.scaled_image = e.image = self.bullet_image
-                e.radius = 4
-            if entities.StarSprite in e:
-                e.scaled_image = e.image = self.star_image
-                e.radius = 8
-            
-    def process(self, things):
+        pygame.init()
+        self.screen = pygame.display.set_mode(size)
+        pygame.display.set_caption(caption)
         self.clear_screen()
         
-        self.draw_starfield(pygame.mouse.get_pos())
+        self.sprites = {
+            entities.HUMAN_SPRITE: (8, r'human.png'),
+            entities.ROCK_SPRITE:  (21, r'spaceArt\png\meteorSmall.png'),
+            entities.STEEL_SPRITE: (21, r'spaceArt\png\steelMeteorSmall.png'),
+            entities.UFO_SPRITE:   (22, r'spaceArt\png\enemyUFO.png'),
+            entities.SHOOTER_SPRITE: (25, r'spaceArt\png\enemyShip.png'),
+            entities.BULLET_SPRITE: (4, r'bullet.png'),
+            entities.MINE_SPRITE: (12, r'spaceArt/png/laserRedShot.png'),
+            entities.STAR_SPRITE: (8, r'asterisk.png')
+        }
         
+        for name, (radius, path) in self.sprites.items():
+            self.sprites[name] = (radius, load_image(path))
+        
+        self.explosions = {
+            "normal": load_image(r'blast_wave.png'),
+            "minor": load_image(r'blast_wave_yellow.png'),
+            "player_death": load_image(r'blast_wave_green.png')
+        }
+        
+        self.large_starfield = generate_stargrid(
+            r'spaceArt\png\Background\starBig.png', 16)
+        self.small_starfield = generate_stargrid(
+            r'spaceArt\png\Background\starSmall.png', 8)
+            
+        self.title_font = pygame.font.Font(
+            load_resource(r'fonts\orbitron\OrbitronMedium.ttf'), 32)
+        self.font = pygame.font.Font(
+            load_resource(r'fonts\orbitron\OrbitronMedium.ttf'), 16)
+        
+    def initialize(self, things):
+        '''Initializes all sprites and entities.'''
+        for entity in things:
+            for sprite, (radius, _) in self.sprites.items():
+                if sprite in entity:
+                    entity.radius = radius
+                    # Technically unnecessary, but makes lookup easier.
+                    entity.sprite = sprite
+            
+    def process(self, things):
+        '''Draws everything, and returns a tuple containing a 
+        list of all new entities to be added and any frames.'''
+        self.clear_screen()
+        self.draw_starfield(pygame.mouse.get_pos())
+        self.handle_animations()
+        self.process_entities(things)
+        
+        return [], None
+        
+    def process_entities(self, things):
+        '''Processes all entities.'''
+        components = [
+            entities.DRAWABLE,
+            entities.DEAD,
+            entities.EXPLOSION,
+            entities.DAMAGEABLE,
+            entities.COLLECTOR_ACTIVE
+        ]
+        
+        for entity in things:
+            for component in components:
+                if component in entity:
+                    func_name = 'handle_{0}'.format(component.lower())
+                    func = getattr(self, func_name)
+                    func(entity)
+
+    def handle_drawable(self, entity):
+        '''Draws any drawable image.'''
+        image = self.get_image(entity)
+        self.draw_image(image, entity.position)
+        
+    def handle_dead(self, entity):
+        '''Handles any dead entities, primarily through explosions.'''
+        if entities.USER_CONTROLLABLE in entity:
+            self.add_explosion(
+                (4, 6), 
+                entity.position, 
+                20, 
+                'player_death', 
+                255)
+        elif entities.BULLET not in entity:
+            self.add_explosion(
+                (4, 6), 
+                entity.position, 
+                20, 
+                'normal', 
+                255)
+                
+    def handle_explosion(self, entity):
+        '''Handles any explosions.'''
+        if entity.reason == 'Collision':
+            self.add_explosion(
+                (2, 3), 
+                entity.position, 
+                4, 
+                'minor', 
+                127)
+        elif entity.reason == 'BULLET':
+            self.add_explosion(
+                (2, 3), 
+                entity.position, 
+                4, 
+                'normal', 
+                127)
+
+    def handle_damageable(self, entity):
+        '''Draws a health bar.'''
+        # Boundary
+        if entity.health != entity.max_health and entity.health > 0:
+            _, height = self.get_image(entity).get_size()
+            sides = int(10.0 * entity.health / entity.max_health) + 1
+            corner = (entity.position.x - sides, 
+                      entity.position.y - height / 2 - 10)
+            size = (sides * 2, 5)
+            pygame.draw.rect(
+                self.screen, 
+                (255, 0, 0), 
+                pygame.Rect(corner, size))
+                
+    def handle_collector_active(self, entity):
+        '''Draws a tractor beam.'''
+        for orbiting in entity.collected_objects:
+            distance = physics.get_distance(
+                orbiting.position, 
+                entity.position)
+            width = 7 - 5 * distance / entity.draw_radius
+            pygame.draw.line(
+                self.screen, 
+                (0, 255, 0), 
+                entity.position.pos(),
+                orbiting.position.pos(), 
+                int(width))
+                
+    def get_image(self, entity):
+        '''Gets the image of a sprite, and handles all scaling.'''
+        image = self.sprites[entity.sprite][1]
+        if entities.ROTATES in entity:
+            image = pygame.transform.rotate(
+                image, entity.angle / math.pi * 180)
+        return image
+                        
+    def heartbeat(self):
+        '''Called after the loop, for anything which is vital for keeping
+        the game running but doesn't actually process anything.'''
+        self.display()
+        
+    def handle_animations(self):
+        '''Processes, updates, and handles all animations.'''
         new_animations = []
         
         for animation in self.animations:
             centerpoint, growth, image = animation
             width, height = image.get_size()
-            image = pygame.transform.scale(image, ((width + growth), (height + growth)))
+            image = pygame.transform.scale(
+                image, 
+                ((width + growth), (height + growth)))
             self.draw_image(image, centerpoint)
             growth -= 1
             if growth > 0:
                 new_animations.append((centerpoint, growth, image))
         self.animations = new_animations
-            
-        
-        for e in things:
-            if entities.Rotates in e:
-                e.scaled_image = pygame.transform.rotate(e.image, e.angle/math.pi * 180)
-            if entities.Drawable in e:
-                self.draw_image(e.scaled_image, e.position)
-            if entities.Dead in e:
-                if entities.UserControllable in e:
-                    self.add_explosion((4, 6), e.position, 20, self.blast_wave_player_death, 255)
-                elif entities.Bullet not in e:
-                    self.add_explosion((4, 6), e.position, 20, self.blast_wave, 255)
-            if entities.Explosion in e:
-                if e.reason == 'Collision':
-                    self.add_explosion((2, 3), e.position, 4, self.blast_wave_minor, 127)
-                elif e.reason == 'Bullet':
-                    self.add_explosion((2, 3), e.position, 4, self.blast_wave, 127)
-                    
-            if entities.Damageable in e:
-                # Boundary
-                if e.health != e.max_health and e.health > 0:
-                    width, height = e.scaled_image.get_size()
-                    sides = int(10.0 * e.health / e.max_health) + 1
-                    corner = (e.position.x - sides, e.position.y - height / 2 - 10)
-                    size = (sides * 2, 5)
-                    pygame.draw.rect(self.screen, (255, 0, 0), pygame.Rect(corner, size))
-            if entities.Collector in e:
-                for orbiting in e.collected_objects:
-                    distance = physics.get_distance(orbiting.position, e.position) 
-                    width = 7 - 5 * distance / e.draw_radius
-                    pygame.draw.line(
-                        self.screen, 
-                        (0, 255, 0), 
-                        e.position.pos(),
-                        orbiting.position.pos(), 
-                        int(width))
                         
-    def add_explosion(self, wave_range, position, growth, image, size):
-        for i in xrange(random.randint(*wave_range)):
+    def add_explosion(self, wave_range, position, growth, image, size=255):
+        '''Adds an explosion using the a random `n` number of waves specified
+        by the image (`n` is within `wave_range`) at the given position, which
+        starts with the initial `size` and grows specified by `growth`'''
+        min_wave, max_wave = wave_range
+        image = self.explosions[image]
+        for _ in xrange(random.randint(min_wave, max_wave)):
             image = pygame.transform.rotate(image, random.random() * 360)
-            scale = (int(51 + random.random() * size), int(51 + random.random() * size))
+            scale = (int(101 + random.random() * (size - 80)), 
+                     int(101 + random.random() * (size - 80)))
             image = pygame.transform.scale(image, scale)
             self.animations.append((position, growth, image))
                         
     def draw_image(self, image, position):
+        '''Draws a sprite to the screen, accounting for offsets.'''
         width, height = image.get_size()
-        x, y = position.pos()
-        self.screen.blit(image, (x - width / 2, y - height / 2))
+        x_coord, y_coord = position.pos()
+        self.screen.blit(image, (x_coord - width / 2, y_coord - height / 2))
                 
     def draw_starfield(self, input_coords):
-        x, y = input_coords
-        offset = physics.Cartesian(x - 400, y - 400)
+        '''Draws a starfield, with parallax given the input mouse
+        coordinates.'''
+        x_coord, y_coord = input_coords
+        offset = physics.Cartesian(x_coord - 400, y_coord - 400)
         for star in self.large_starfield:
             self.screen.blit(
                 star['image'],
@@ -175,18 +254,21 @@ class Renderer(object):
                 (star['dest'] - offset * 8 / 400).pos())
                 
     def shadeout(self):
+        '''Shades the display screen for menus and such.'''
         shade = pygame.Surface((800, 800))
         shade.set_alpha(200)
-        shade.fill((0,0,0))
+        shade.fill((0, 0, 0))
         self.screen.blit(shade, (0, 0))
         
     def draw_menu_background(self, width, height):
+        '''Draws the background for the menu.'''
         menu = pygame.Surface((width, height))
         menu.set_alpha(200)
-        menu.fill((255,255,255))
+        menu.fill((255, 255, 255))
         self.screen.blit(menu, (400 - width/2, 400 - height / 2))
                 
     def draw_menu(self, menu_name, options, size=200):
+        '''Draws the text of the menu itself.'''
         self.shadeout()
         height = 40 + len(options) * 20 + 10
         self.draw_menu_background(size, height)
@@ -196,11 +278,9 @@ class Renderer(object):
         if "lost" in menu_name:
             color = (255, 0, 0)
         
-        self.screen.blit(self.title_font.render(
-            menu_name,
-            True,
-            color,
-        ), (400 - size/2 + 10, counter))
+        self.screen.blit(
+            self.title_font.render(menu_name, True, color), 
+            (400 - size/2 + 10, counter))
         
         counter += 40
         
@@ -213,19 +293,18 @@ class Renderer(object):
                 color = (0, 150, 33) # green
                 extra = "=> {0} <="
             else:
-                color = (14,2,40) 
+                color = (14, 2, 40) 
                 extra = "-> {0}"
                 
-            self.screen.blit(self.font.render(
-                extra.format(option),
-                True,
-                color
-            ), (400 - size/2 + 10, counter))
+            self.screen.blit(
+                self.font.render(extra.format(option), True, color), 
+                (400 - size/2 + 10, counter))
             counter += 20
             
         return current
         
     def draw_dialog(self, menu_name, text):
+        '''Draws a dialog.'''
         self.shadeout()
         height = 40 + len(text) * 20 + 10
         self.draw_menu_background(500, height)
@@ -235,26 +314,24 @@ class Renderer(object):
         if "lost" in menu_name:
             color = (255, 0, 0)
         
-        self.screen.blit(self.title_font.render(
-            menu_name,
-            True,
-            color
-        ), (160, counter))
+        self.screen.blit(
+            self.title_font.render(menu_name, True, color), 
+            (160, counter))
         
         counter += 40
         
-        for t in text:
-            self.screen.blit(self.font.render(
-                t,
-                True,
-                (14,2,40)
-            ), (160, counter))
+        for line in text:
+            self.screen.blit(
+                self.font.render(line, True, (14,2,40)), 
+                (160, counter))
             counter += 20
 
     def clear_screen(self):
-        self.screen.fill((14,2,40)) # A deep purple
+        '''Fills the screen with the background color'''
+        self.screen.fill((14, 2, 40)) # A deep purple
         
     def display(self):
+        '''Displays the screen.'''
         pygame.display.flip()
         
         

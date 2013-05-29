@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+'''
+Contains code for last-resort error handling.
+'''
 
 import sys
 from datetime import datetime
@@ -6,19 +9,12 @@ from datetime import datetime
 import Tkinter
 import tkMessageBox
 
-__version__ = "1.0"
+__version__ = "1.0.0"
 __release__ = "May 28, 2013"
 
-
-def warn(message, record=False):
-    window = Tkinter.Tk()
-    window.wm_withdraw()
-    tkMessageBox.showwarning('Error!', message)
-    if record:
-        log(message)
-    sys.exit()
-
 def error(message, record=False):
+    '''Opens a window reporting an error. This is for when the game 
+    is so borked that pygame has crashed in some way.'''
     window = Tkinter.Tk()
     window.wm_withdraw()
     tkMessageBox.showerror('Error!', message)
@@ -27,7 +23,8 @@ def error(message, record=False):
     sys.exit()
     
 def log(message):
-    with open('log.txt', 'a') as log:
+    '''Opens a logfile and appends the error message to it.'''
+    with open('log.txt', 'a') as logfile:
         text = '\n'.join([
             'Metadata:',
             '    Timestamp: ' + str(datetime.now()),
@@ -40,4 +37,4 @@ def log(message):
             '',
             '~~~~~~~~~~~~~~~~~~~~~~',
             ''])
-        log.write(text)
+        logfile.write(text)

@@ -1,0 +1,398 @@
+Metadata:
+    Timestamp: 2013-05-28 17:48:32.047000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 264, in mainloop
+    next = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 156, in loop
+    raise SystemExit(0)
+SystemExit: 0
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 18:14:58.594000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 309, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 150, in loop
+    return self.keep_alive()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 161, in keep_alive
+    if choice is not None and event.type == pygame.MOUSEBUTTONDOWN:
+NameError: global name 'choice' is not defined
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 18:15:06.235000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 309, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 150, in loop
+    return self.keep_alive()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 161, in keep_alive
+    if choice is not None and event.type == pygame.MOUSEBUTTONDOWN:
+NameError: global name 'choice' is not defined
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:03:27.542000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 123, in loop
+    next_frame = self.handle_processors(self.things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 99, in handle_processors
+    out, next_frame = processors(things)
+TypeError: 'list' object is not callable
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:03:42.924000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 123, in loop
+    next_frame = self.handle_processors(self.things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 99, in handle_processors
+    out, next_frame = processor(things)
+TypeError: 'AI' object is not callable
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:03:59.176000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 123, in loop
+    next_frame = self.handle_processors(self.things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 99, in handle_processors
+    out, next_frame = processor.process(things)
+TypeError: 'NoneType' object is not iterable
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:05:36.766000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 123, in loop
+    next_frame = self.handle_processors(self.things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 99, in handle_processors
+    out, next_frame = processor.process(self.things)
+TypeError: 'NoneType' object is not iterable
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:06:21.874000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 336, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 124, in loop
+    next_frame = self.handle_processors()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 100, in handle_processors
+    out, next_frame = processor.process(self.things)
+TypeError: 'NoneType' object is not iterable
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:07:25.118000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 127, in loop
+    next_frame = self.check_end_conditions()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 158, in check_end_conditions
+    return next_frame
+UnboundLocalError: local variable 'next_frame' referenced before assignment
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:09:13.907000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 340, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 127, in loop
+    next_frame = self.check_end_conditions()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 163, in check_end_conditions
+    return next_frame
+UnboundLocalError: local variable 'next_frame' referenced before assignment
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:09:49.865000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 340, in mainloop
+    next_frame = stack[-1].loop()
+AttributeError: 'function' object has no attribute 'loop'
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:12:52.220000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 328, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 114, in loop
+    next_frame = self.check_end_conditions()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 147, in check_end_conditions
+    self.renderer,
+AttributeError: 'Gameloop' object has no attribute 'renderer'
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:32:52.293000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 120, in loop
+    self.prune_dead_entities()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 137, in prune_dead_entities
+    del self.things[self.things.index(e)]
+NameError: global name 'e' is not defined
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:58:37.866000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 173, in loop
+    self.renderer.process(self.things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 135, in process
+    self.process_entities()
+TypeError: process_entities() takes exactly 2 arguments (1 given)
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 19:58:56.372000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 118, in loop
+    next_frame = self.handle_processors()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 106, in handle_processors
+    out, next_frame = processor.process(self.things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 135, in process
+    self.process_entities(things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 153, in process_entities
+    getattr(self, 'handle_{0}'.format(component.lower()))(entity)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 168, in handle_dead
+    if entities.UserControllable in entity:
+AttributeError: 'Entity' object has no attribute 'UserControllable'
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 20:22:49.720000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 330, in mainloop
+    renderer = graphics.Renderer()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 55, in __init__
+    self.initialize_images()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 87, in initialize_images
+    "normal": load_image(r'images\blast_wave.png'),
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 36, in load_image
+    return pygame.image.load(load_resource(relative)).convert_alpha()
+error: Couldn't open C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\images\images\blast_wave.png
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 20:23:12.228000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 209, in loop
+    self.keep_alive()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 219, in keep_alive
+    self.next_frame()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 257, in <lambda>
+    Gameloop(renderer, things, 0)))
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 86, in __init__
+    self.initialize(self.things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 98, in initialize
+    processor.initialize(things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 111, in initialize
+    for sprite, (radius, _) in self.sprites.items:
+TypeError: 'builtin_function_or_method' object is not iterable
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 20:23:35.147000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 118, in loop
+    next_frame = self.handle_processors()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 106, in handle_processors
+    out, next_frame = processor.process(self.things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 121, in process
+    self.process_entities(things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 138, in process_entities
+    getattr(self, 'handle_{0}'.format(component.lower()))(entity)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\graphics.py", line 186, in handle_damageable
+    _, height = entity.scaled_image.get_size()
+AttributeError: 'Entity' object has no attribute 'scaled_image'
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
+Metadata:
+    Timestamp: 2013-05-28 21:12:06.524000
+    Version:   1.0.0
+
+BEGIN MESSAGE:
+
+Top-level exception: Traceback (most recent call last):
+  File ".\smash.py", line 24, in main
+    frames.mainloop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 335, in mainloop
+    next_frame = stack[-1].loop()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 118, in loop
+    next_frame = self.handle_processors()
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\frames.py", line 106, in handle_processors
+    out, next_frame = processor.process(self.things)
+  File "C:\Users\Michael\Dropbox\Projects\Code\Programs\Orbital-Smash\orbital-smash\ui.py", line 52, in process
+    func(entity, event)
+NameError: global name 'event' is not defined
+
+END MESSAGE
+
+~~~~~~~~~~~~~~~~~~~~~~
